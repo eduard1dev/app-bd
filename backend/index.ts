@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import bodyParser from 'body-parser';
 import { Pool } from 'pg';
 class Server {
   private app: express.Application;
@@ -15,6 +16,7 @@ class Server {
     this.app.set('port', 3001);
     this.app.use(express.json());
     this.app.use(cors());
+    this.app.use(bodyParser.json());
   }
 
   public async routes() {
