@@ -107,7 +107,7 @@ class Server {
           `UPDATE cliente SET nome = 'Saul Goodman'  WHERE cpf = '${req.params.cpf}'`,
         )
         .then((result) => {
-          res.send(result.rows);
+          res.status(201).send(result.rows);
         })
         .catch((err) => {
           console.log(err);
@@ -116,8 +116,16 @@ class Server {
     });
 
     // DELETE REQUESTS
-    this.app.delete('/cliente/:cpf', (req, res) => {
-      //this.pool.query(``);
+    this.app.delete('/venda/:id', (req, res) => {
+      this.pool
+        .query(`DELETE FROM venda WHERE venda_id = '${req.params.id}'`)
+        .then((result) => {
+          res.status(204).send(result.rows);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.send(500);
+        });
     });
   }
 

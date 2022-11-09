@@ -43,8 +43,11 @@ export default function useHome() {
 
   async function addSale(values: any) {
     try {
-      const { data } = await api.post('/venda', values);
-      setSales([...sales, values]);
+      await api.post('/venda', values);
+      setSales([
+        ...sales,
+        { venda_id: sales[sales.length - 1].venda_id + 1, ...values },
+      ]);
     } catch (err) {
       console.log(err);
     }
@@ -54,5 +57,22 @@ export default function useHome() {
     addSale(values);
   }
 
-  return { getAllSales, getAllClients, clients, sales, addSale, onSubmit };
+  async function removeSale(id: number) {
+    try {
+      await api.delete(`/venda/${id}`);
+      setSales((oldState) => oldState.filter((item) => item.venda_id !== id));
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  return {
+    getAllSales,
+    getAllClients,
+    clients,
+    sales,
+    addSale,
+    onSubmit,
+    removeSale,
+  };
 }

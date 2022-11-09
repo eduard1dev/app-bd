@@ -29,12 +29,22 @@ import {
   Thead,
   Tr,
   useDisclosure,
+  Text,
 } from '@chakra-ui/react';
 
 function Home() {
-  const { getAllSales, getAllClients, clients, sales, addSale, onSubmit } =
-    useHome();
+  const {
+    getAllSales,
+    getAllClients,
+    clients,
+    sales,
+    addSale,
+    removeSale,
+    onSubmit,
+  } = useHome();
+
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const {
     handleSubmit,
     register,
@@ -50,7 +60,9 @@ function Home() {
     <>
       <Box p={16}>
         <Center w="100%" flexDirection="column">
-          <h1>App banco de dados</h1>
+          <Text fontSize={'2xl'} marginBottom={8}>
+            Sistema de Gerenciamento da Concessionária
+          </Text>
           <Box borderWidth="1px" borderRadius="lg" w="100%" p={8}>
             <Accordion defaultIndex={[-1]} allowMultiple={true}>
               <AccordionItem>
@@ -121,6 +133,14 @@ function Home() {
                             <Td>{item.pagamento_id}</Td>
                             <Td>{item.vendedor_cpf}</Td>
                             <Td isNumeric>{item.valor}</Td>
+                            <Td
+                              onClick={() => removeSale(item.venda_id)}
+                              marginLeft={4}
+                              color={'blue'}
+                              cursor={'pointer'}
+                            >
+                              Remover
+                            </Td>
                           </Tr>
                         ))}
                       </Tbody>
@@ -130,8 +150,8 @@ function Home() {
               </AccordionItem>
             </Accordion>
             <Center p={8} gap={8}>
-              <Button onClick={onOpen}>Adicionar um Cliente</Button>
-              <Button>Adicionar uma Venda</Button>
+              <Button onClick={onOpen}>Adicionar uma Venda</Button>
+              <Button>Adicionar um Cliente</Button>
             </Center>
           </Box>
         </Center>
