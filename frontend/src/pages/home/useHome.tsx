@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FieldValues, UseFormSetValue } from 'react-hook-form';
 import { api } from '../../service/api';
 
 export default function useHome() {
@@ -22,6 +23,7 @@ export default function useHome() {
 
   const [clients, setClients] = useState<Client[]>([]);
   const [sales, setSales] = useState<Sales[]>([]);
+  const [isEditSaleMode, setEditSaleMode] = useState(false);
 
   async function getAllClients() {
     try {
@@ -46,15 +48,29 @@ export default function useHome() {
       await api.post('/venda', values);
       setSales([
         ...sales,
-        { venda_id: sales[sales.length - 1].venda_id + 1, ...values },
+        { venda_id: (sales[sales.length - 1]?.venda_id ?? 0) + 1, ...values },
       ]);
     } catch (err) {
       console.log(err);
     }
   }
 
+  async function updateSale(values: any) {
+    try {
+      await api.put(`/venda/${values.venda_id}`, values);
+      setSales((oldstate) =>
+        oldstate.map((item) =>
+          item.venda_id === values.venda_id ? values : item,
+        ),
+      );
+      setEditSaleMode(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   function onSubmit(values: any) {
-    addSale(values);
+    !isEditSaleMode ? addSale(values) : updateSale(values);
   }
 
   async function removeSale(id: number) {
@@ -66,6 +82,19 @@ export default function useHome() {
     }
   }
 
+  function onClickSale(
+    item: Sales,
+    setValue: UseFormSetValue<FieldValues>,
+    saleDrawerOnOpen: () => void,
+  ) {
+    const itemsParsed = Object.entries(item);
+    itemsParsed.forEach(([name, value]: any) =>
+      setValue(name, name !== 'data' ? value : value.split('T')[0]),
+    );
+    setEditSaleMode(true);
+    saleDrawerOnOpen();
+  }
+
   return {
     getAllSales,
     getAllClients,
@@ -74,5 +103,8 @@ export default function useHome() {
     addSale,
     onSubmit,
     removeSale,
+    onClickSale,
+    isEditSaleMode,
+    setEditSaleMode,
   };
 }

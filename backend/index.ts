@@ -101,10 +101,19 @@ class Server {
     });
 
     // PUT REQUESTS
-    this.app.put('/cliente/:cpf', (req, res) => {
+    this.app.put('/venda/:id', (req, res) => {
+      const data = Object.entries(req.body);
+      console.log(data.map(([name, value]) => `${name} = ${value}`).join(','));
       this.pool
         .query(
-          `UPDATE cliente SET nome = 'Saul Goodman'  WHERE cpf = '${req.params.cpf}'`,
+          `UPDATE venda SET ${data
+            .map(
+              ([name, value]) =>
+                `${name} = ${
+                  typeof value == 'string' ? "'" + value + "'" : value
+                }`,
+            )
+            .join(',')} WHERE venda_id = '${req.params.id}'`,
         )
         .then((result) => {
           res.status(201).send(result.rows);

@@ -38,17 +38,24 @@ function Home() {
     getAllClients,
     clients,
     sales,
-    addSale,
+    isEditSaleMode,
     removeSale,
     onSubmit,
+    onClickSale,
+    setEditSaleMode,
   } = useHome();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: saleDrawerIsOpen,
+    onOpen: saleDrawerOnOpen,
+    onClose: saleDrawerOnClose,
+  } = useDisclosure();
 
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
+    setValue,
   } = useForm();
 
   useEffect(() => {
@@ -58,11 +65,8 @@ function Home() {
 
   return (
     <>
-      <Box p={16}>
+      <Box paddingX={16} paddingY={28}>
         <Center w="100%" flexDirection="column">
-          <Text fontSize={'2xl'} marginBottom={8}>
-            Sistema de Gerenciamento da Concessionária
-          </Text>
           <Box borderWidth="1px" borderRadius="lg" w="100%" p={8}>
             <Accordion defaultIndex={[-1]} allowMultiple={true}>
               <AccordionItem>
@@ -126,8 +130,16 @@ function Home() {
                       <Tbody>
                         {sales.map((item, index) => (
                           <Tr key={index.toString()}>
-                            <Td>{item.venda_id}</Td>
-                            <Td>{item.cliente_cpf}</Td>
+                            <Td display={'flex'} flexDir={'row'}>
+                              {item.venda_id}
+                            </Td>
+                            <Td
+                              onClick={() =>
+                                onClickSale(item, setValue, saleDrawerOnOpen)
+                              }
+                            >
+                              {item.cliente_cpf}
+                            </Td>
                             <Td>{item.tipo_pagamento}</Td>
                             <Td>{item.veiculo_id}</Td>
                             <Td>{item.pagamento_id}</Td>
@@ -150,16 +162,22 @@ function Home() {
               </AccordionItem>
             </Accordion>
             <Center p={8} gap={8}>
-              <Button onClick={onOpen}>Adicionar uma Venda</Button>
+              <Button onClick={saleDrawerOnOpen}>Adicionar uma Venda</Button>
               <Button>Adicionar um Cliente</Button>
             </Center>
           </Box>
         </Center>
       </Box>
-      <Drawer onClose={onClose} isOpen={isOpen}>
+      <Drawer
+        onOverlayClick={() => setEditSaleMode(false)}
+        onClose={saleDrawerOnClose}
+        isOpen={saleDrawerIsOpen}
+      >
         <DrawerOverlay />
         <DrawerContent>
-          <DrawerHeader borderBottomWidth="1px">Nova venda</DrawerHeader>
+          <DrawerHeader borderBottomWidth="1px">
+            {!isEditSaleMode ? 'Nova venda' : 'Editar venda'}
+          </DrawerHeader>
           <DrawerBody>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl isInvalid={!!errors.tipo_pagamento}>
@@ -234,7 +252,7 @@ function Home() {
                 isLoading={isSubmitting}
                 type="submit"
               >
-                Adicionar
+                {!isEditSaleMode ? 'Adicionar' : 'Editar'}
               </Button>
             </form>
           </DrawerBody>
