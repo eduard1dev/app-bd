@@ -9,6 +9,12 @@ export default function useHome() {
     data_nascimento: string;
   }
 
+  interface Seller {
+    nome: string;
+    cpf: string;
+    data_nascimento: string;
+  }
+
   interface Sales {
     venda_id: number;
     tipo_pagamento: string;
@@ -22,6 +28,7 @@ export default function useHome() {
   }
 
   const [clients, setClients] = useState<Client[]>([]);
+  const [sellers, setSellers] = useState<Seller[]>([]);
   const [sales, setSales] = useState<Sales[]>([]);
   const [isEditSaleMode, setEditSaleMode] = useState(false);
 
@@ -29,6 +36,15 @@ export default function useHome() {
     try {
       const { data } = await api.get('/cliente');
       setClients(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function getAllSellers() {
+    try {
+      const { data } = await api.get('/vendedor');
+      setSellers(data);
     } catch (err) {
       console.log(err);
     }
@@ -98,6 +114,8 @@ export default function useHome() {
   return {
     getAllSales,
     getAllClients,
+    getAllSellers,
+    sellers,
     clients,
     sales,
     addSale,

@@ -43,6 +43,8 @@ function Home() {
     onSubmit,
     onClickSale,
     setEditSaleMode,
+    getAllSellers,
+    sellers,
   } = useHome();
 
   const {
@@ -61,6 +63,7 @@ function Home() {
   useEffect(() => {
     getAllClients();
     getAllSales();
+    getAllSellers();
   }, []);
 
   return (
@@ -68,6 +71,39 @@ function Home() {
       <Box paddingX={16} paddingY={28}>
         <Center w="100%" flexDirection="column">
           <Box borderWidth="1px" borderRadius="lg" w="100%" p={8}>
+            <Accordion defaultIndex={[-1]} allowMultiple={true}>
+              <AccordionItem>
+                <h2>
+                  <AccordionButton>
+                    <Box flex="1" textAlign="left">
+                      Vendedores
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                  <TableContainer>
+                    <Table variant="simple">
+                      <Thead>
+                        <Tr>
+                          <Th>Nome</Th>
+                          <Th>CPF</Th>
+                        </Tr>
+                      </Thead>
+                      <Tbody>
+                        {sellers.map((item, index) => (
+                          <Tr key={index.toString()}>
+                            <Td>{item.nome}</Td>
+                            <Td>{item.cpf}</Td>
+                          </Tr>
+                        ))}
+                      </Tbody>
+                    </Table>
+                  </TableContainer>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
+
             <Accordion defaultIndex={[-1]} allowMultiple={true}>
               <AccordionItem>
                 <h2>

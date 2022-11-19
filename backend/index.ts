@@ -36,6 +36,17 @@ class Server {
       }
     });
 
+    this.app.get('/vendedor', (_, res) => {
+      try {
+        this.pool.query('SELECT * FROM vendedor').then((result) => {
+          console.log(result.rows);
+          res.send(result.rows);
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
     this.app.get('/cliente/:cpf', (req, res) => {
       try {
         this.pool
