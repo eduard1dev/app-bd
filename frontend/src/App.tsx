@@ -1,11 +1,14 @@
+import '@fontsource/overpass';
+
 import { Routes, Route } from 'react-router-dom';
 import { Home } from './pages/home';
-import { Details } from './pages/details';
-import { ChakraProvider, Flex, Text } from '@chakra-ui/react';
+import { ChakraProvider, Flex, Heading } from '@chakra-ui/react';
+
+import theme from './theme';
 
 function App() {
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <Flex
         as="header"
         position="fixed"
@@ -16,11 +19,12 @@ function App() {
         justifyContent={'center'}
         p={6}
       >
-        <Text fontSize={'2xl'}>Sistema de Gerenciamento da Concessionária</Text>
+        <Heading fontFamily={theme} fontSize={'2xl'}>
+          Sistema de Gerenciamento da Concessionária
+        </Heading>
       </Flex>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="group/:id" element={<Details />} />
       </Routes>
     </ChakraProvider>
   );

@@ -173,6 +173,7 @@ function Home() {
                               onClick={() =>
                                 onClickSale(item, setValue, saleDrawerOnOpen)
                               }
+                              cursor={'pointer'}
                             >
                               {item.cliente_cpf}
                             </Td>

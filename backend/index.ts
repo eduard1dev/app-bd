@@ -86,7 +86,7 @@ class Server {
     this.app.post('/venda', (req, res) => {
       this.pool
         .query(
-          `INSERT INTO venda VALUES (DEFAULT, '${req.body.tipo_pagamento}',${req.body.valor}, '${req.body.data}', '${req.body.veiculo_id}', '${req.body.vendedor_cpf}','${req.body.pagamento_id}','${req.body.avaliacao_id}','${req.body.cliente_cpf}')`,
+          `INSERT INTO venda VALUES (DEFAULT, '${req.body.cliente_cpf}','${req.body.tipo_pagamento}', '${req.body.veiculo_id}', '${req.body.pagamento_id}', '${req.body.vendedor_cpf}',${req.body.valor}, '${req.body.data}', '${req.body.avaliacao_id}')`,
         )
         .then((result) => {
           res.send(result.rows);
